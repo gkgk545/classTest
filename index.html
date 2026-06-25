@@ -1,0 +1,1771 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🏫 신나는 교실 도구 상자</title>
+  <!-- Google Fonts for friendly rounded fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jua&family=Nanum+Gothic:wght@400;700;800&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+  
+  <style>
+    /* Design System & Root Variables */
+    :root {
+      --bg-gradient: linear-gradient(135deg, #FFFDF0 0%, #E8F5E9 50%, #E3F2FD 100%);
+      --primary: #4A90E2;
+      --primary-hover: #357ABD;
+      --accent-draw: #FF6B6B;
+      --accent-draw-hover: #EE5253;
+      --accent-timer: #FF9F43;
+      --accent-timer-hover: #F39C12;
+      --accent-group: #10AC84;
+      --accent-group-hover: #0E9A75;
+      --text-main: #2C3E50;
+      --text-muted: #7F8C8D;
+      --card-bg: rgba(255, 255, 255, 0.9);
+      --card-border: rgba(255, 255, 255, 0.5);
+      --radius-lg: 24px;
+      --radius-md: 16px;
+      --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 10px 20px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 15px 35px rgba(0, 0, 0, 0.12);
+      --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Nanum Gothic', sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Headings with Jua Font */
+    h1, h2, h3, .font-jua {
+      font-family: 'Jua', sans-serif;
+      font-weight: normal;
+    }
+
+    /* App Layout */
+    header {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+      box-shadow: var(--shadow-sm);
+      z-index: 10;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-emoji {
+      font-size: 2.2rem;
+      animation: bounce 2s infinite;
+    }
+
+    .logo-text h1 {
+      font-size: 2rem;
+      color: #34495e;
+      text-shadow: 1px 1px 0px #fff;
+    }
+
+    .logo-text p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
+    /* Navigation Tabs */
+    .nav-tabs {
+      display: flex;
+      gap: 15px;
+    }
+
+    .nav-btn {
+      font-family: 'Jua', sans-serif;
+      font-size: 1.25rem;
+      padding: 12px 24px;
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: white;
+      color: var(--text-main);
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+      border: 2px solid transparent;
+    }
+
+    .nav-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .nav-btn.active[data-tab="draw"] {
+      background: var(--accent-draw);
+      color: white;
+    }
+    .nav-btn.active[data-tab="timer"] {
+      background: var(--accent-timer);
+      color: white;
+    }
+    .nav-btn.active[data-tab="group"] {
+      background: var(--accent-group);
+      color: white;
+    }
+
+    /* Main Container */
+    main {
+      flex: 1;
+      display: flex;
+      padding: 30px;
+      gap: 30px;
+      max-width: 1600px;
+      margin: 0 auto;
+      width: 100%;
+      height: calc(100vh - 100px);
+    }
+
+    /* Sidebar - Student List Management */
+    .sidebar {
+      width: 320px;
+      background: var(--card-bg);
+      border: 2px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-md);
+      transition: var(--transition);
+    }
+
+    .sidebar h2 {
+      font-size: 1.6rem;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #34495e;
+    }
+
+    .student-textarea {
+      width: 100%;
+      flex: 1;
+      padding: 15px;
+      border: 2px solid #ddd;
+      border-radius: var(--radius-md);
+      font-size: 1.1rem;
+      line-height: 1.5;
+      resize: none;
+      outline: none;
+      transition: var(--transition);
+      background: #fafafa;
+    }
+
+    .student-textarea:focus {
+      border-color: var(--primary);
+      background: white;
+      box-shadow: 0 0 8px rgba(74, 144, 226, 0.2);
+    }
+
+    .sidebar-info {
+      margin-top: 10px;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      font-weight: bold;
+    }
+
+    .sidebar-actions {
+      margin-top: 15px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-secondary {
+      flex: 1;
+      font-family: 'Jua', sans-serif;
+      padding: 10px;
+      border: none;
+      border-radius: var(--radius-md);
+      background: #e2e8f0;
+      color: #4a5568;
+      cursor: pointer;
+      font-size: 1.05rem;
+      transition: var(--transition);
+    }
+
+    .btn-secondary:hover {
+      background: #cbd5e1;
+    }
+
+    .btn-primary {
+      flex: 1.5;
+      font-family: 'Jua', sans-serif;
+      padding: 10px;
+      border: none;
+      border-radius: var(--radius-md);
+      background: var(--primary);
+      color: white;
+      cursor: pointer;
+      font-size: 1.05rem;
+      transition: var(--transition);
+      box-shadow: 0 4px 6px rgba(74, 144, 226, 0.2);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+      transform: translateY(-2px);
+    }
+
+    /* Content Area */
+    .content-area {
+      flex: 1;
+      position: relative;
+    }
+
+    .tab-content {
+      display: none;
+      height: 100%;
+      background: var(--card-bg);
+      border: 2px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: 30px;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow-y: auto;
+    }
+
+    .tab-content.active {
+      display: flex;
+      flex-direction: column;
+      animation: fadeInUp 0.4s ease-out;
+    }
+
+    /* Tool 1: Random Selection View */
+    .draw-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      text-align: center;
+      gap: 30px;
+    }
+
+    .draw-display-box {
+      width: 100%;
+      max-width: 700px;
+      height: 320px;
+      background: linear-gradient(145deg, #ffffff, #f1f3f6);
+      border: 4px dashed #bdc3c7;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      box-shadow: inset 0 5px 15px rgba(0,0,0,0.05);
+      transition: var(--transition);
+    }
+
+    .draw-display-box.shuffling {
+      border-color: var(--accent-draw);
+      animation: shake 0.2s infinite alternate;
+    }
+
+    .draw-display-box.winner {
+      border-color: #27ae60;
+      background: radial-gradient(circle, #ffffff 0%, #e8f8f5 100%);
+      box-shadow: var(--shadow-lg), 0 0 20px rgba(46, 204, 113, 0.2);
+      transform: scale(1.02);
+    }
+
+    .draw-result {
+      font-family: 'Jua', sans-serif;
+      font-size: 7.5rem;
+      color: var(--text-main);
+      text-shadow: 2px 4px 10px rgba(0,0,0,0.1);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .draw-result.animate-win {
+      animation: popWin 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .draw-result.placeholder-text {
+      font-size: 4.5rem;
+      color: #bdc3c7;
+    }
+
+    .btn-draw-main {
+      font-family: 'Jua', sans-serif;
+      font-size: 2.5rem;
+      padding: 20px 70px;
+      border: none;
+      border-radius: 50px;
+      background: var(--accent-draw);
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(255, 107, 107, 0.4);
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-draw-main::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -50%; width: 200%; height: 100%;
+      background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
+      transform: skewX(-25deg);
+      transition: 0.75s;
+      opacity: 0;
+    }
+
+    .btn-draw-main:hover::after {
+      left: 125%;
+      opacity: 1;
+    }
+
+    .btn-draw-main:hover {
+      background: var(--accent-draw-hover);
+      transform: translateY(-4px) scale(1.03);
+      box-shadow: 0 15px 30px rgba(255, 107, 107, 0.5);
+    }
+
+    .btn-draw-main:active {
+      transform: translateY(-1px) scale(0.98);
+    }
+
+    .draw-options {
+      display: flex;
+      gap: 25px;
+      font-size: 1.15rem;
+      font-weight: bold;
+      color: #57606f;
+      align-items: center;
+    }
+
+    .draw-options label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .draw-options input[type="checkbox"] {
+      width: 22px;
+      height: 22px;
+      accent-color: var(--accent-draw);
+      cursor: pointer;
+    }
+
+    /* Excluded List for display */
+    .excluded-container {
+      width: 100%;
+      max-width: 700px;
+      text-align: left;
+      background: #f8f9fa;
+      border-radius: var(--radius-md);
+      padding: 15px;
+      border: 1px solid #e9ecef;
+      font-size: 0.95rem;
+    }
+    
+    .excluded-title {
+      font-weight: 800;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .btn-reset-excluded {
+      background: none;
+      border: none;
+      color: var(--accent-draw);
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 0.9rem;
+      text-decoration: underline;
+    }
+
+    .excluded-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .excluded-tag {
+      background: #e9ecef;
+      color: #495057;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* Tool 2: Timer View */
+    .timer-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      gap: 25px;
+    }
+
+    .timer-display-wrapper {
+      position: relative;
+      width: 320px;
+      height: 320px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .timer-svg {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    .timer-bg-circle {
+      fill: none;
+      stroke: #f1f3f6;
+      stroke-width: 12px;
+    }
+
+    .timer-progress-circle {
+      fill: none;
+      stroke: var(--accent-timer);
+      stroke-width: 12px;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.1s linear;
+    }
+
+    .timer-text-overlay {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .timer-time {
+      font-family: 'Outfit', 'Jua', sans-serif;
+      font-size: 5rem;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.1;
+    }
+
+    .timer-state-label {
+      font-family: 'Jua', sans-serif;
+      font-size: 1.3rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Timer presets and adjusters */
+    .timer-controls-box {
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .timer-row {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-timer-preset {
+      font-family: 'Jua', sans-serif;
+      font-size: 1.3rem;
+      padding: 12px 22px;
+      background: white;
+      border: 2px solid #e2e8f0;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: var(--transition);
+      min-width: 80px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-timer-preset:hover {
+      border-color: var(--accent-timer);
+      color: var(--accent-timer);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-timer-adj {
+      font-family: 'Jua', sans-serif;
+      font-size: 1.25rem;
+      padding: 10px 18px;
+      background: #f8fafc;
+      border: 2px solid #cbd5e1;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: var(--transition);
+      font-weight: bold;
+    }
+
+    .btn-timer-adj:hover {
+      background: #cbd5e1;
+      transform: translateY(-1px);
+    }
+
+    /* Main Timer action buttons */
+    .timer-actions {
+      display: flex;
+      gap: 15px;
+      width: 100%;
+      max-width: 450px;
+      margin-top: 10px;
+    }
+
+    .btn-timer-main {
+      flex: 2;
+      font-family: 'Jua', sans-serif;
+      font-size: 1.8rem;
+      padding: 15px 30px;
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      color: white;
+      transition: var(--transition);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .btn-timer-main.start {
+      background: var(--accent-timer);
+      box-shadow: 0 6px 15px rgba(255, 159, 67, 0.3);
+    }
+    .btn-timer-main.start:hover {
+      background: var(--accent-timer-hover);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(255, 159, 67, 0.4);
+    }
+
+    .btn-timer-main.pause {
+      background: #95a5a6;
+      box-shadow: 0 6px 15px rgba(149, 165, 166, 0.3);
+    }
+    .btn-timer-main.pause:hover {
+      background: #7f8c8d;
+      transform: translateY(-3px);
+    }
+
+    .btn-timer-reset {
+      flex: 1;
+      font-family: 'Jua', sans-serif;
+      font-size: 1.5rem;
+      padding: 15px 20px;
+      border: 2px solid #cbd5e1;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      background: white;
+      color: #64748b;
+      transition: var(--transition);
+    }
+    .btn-timer-reset:hover {
+      background: #f1f5f9;
+      border-color: #94a3b8;
+    }
+
+    /* Tool 3: Group Maker View */
+    .group-container {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      gap: 20px;
+    }
+
+    .group-setup-panel {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      background: #f8fafc;
+      border: 2px solid #e2e8f0;
+      border-radius: var(--radius-md);
+      padding: 20px;
+      gap: 20px;
+    }
+
+    .group-count-selector {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .group-count-selector span {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .group-count-control {
+      display: flex;
+      align-items: center;
+      background: white;
+      border: 2px solid #cbd5e1;
+      border-radius: 40px;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-count {
+      width: 48px;
+      height: 48px;
+      border: none;
+      background: white;
+      font-size: 1.8rem;
+      font-family: 'Jua', sans-serif;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #64748b;
+      transition: var(--transition);
+    }
+
+    .btn-count:hover {
+      background: #f1f5f9;
+      color: var(--accent-group);
+    }
+
+    .group-count-display {
+      font-family: 'Outfit', 'Jua', sans-serif;
+      width: 60px;
+      text-align: center;
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .btn-group-run {
+      font-family: 'Jua', sans-serif;
+      font-size: 1.6rem;
+      padding: 12px 40px;
+      border: none;
+      border-radius: var(--radius-md);
+      background: var(--accent-group);
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 6px 15px rgba(16, 172, 132, 0.3);
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-group-run:hover {
+      background: var(--accent-group-hover);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(16, 172, 132, 0.4);
+    }
+
+    /* Output Results */
+    .group-results-area {
+      flex: 1;
+      border: 2px dashed #cbd5e1;
+      border-radius: var(--radius-md);
+      padding: 20px;
+      background: #fafafb;
+      min-height: 250px;
+      position: relative;
+    }
+
+    .group-results-empty {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      color: var(--text-muted);
+      font-size: 1.25rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .group-results-empty .icon {
+      font-size: 3rem;
+    }
+
+    /* Group Grid Display */
+    .group-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    .group-card {
+      background: white;
+      border: 2px solid #e2e8f0;
+      border-radius: var(--radius-md);
+      padding: 20px;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+      animation: zoomIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .group-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 6px;
+      background: var(--accent-group);
+    }
+
+    /* Colors per group */
+    .group-card:nth-child(2n)::before { background: var(--accent-draw); }
+    .group-card:nth-child(3n)::before { background: var(--accent-timer); }
+    .group-card:nth-child(4n)::before { background: var(--primary); }
+    .group-card:nth-child(5n)::before { background: #9b59b6; }
+
+    .group-card-header {
+      font-family: 'Jua', sans-serif;
+      font-size: 1.4rem;
+      color: #34495e;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .group-member-count {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.95rem;
+      background: #f1f5f9;
+      padding: 2px 8px;
+      border-radius: 12px;
+      color: #64748b;
+      font-weight: bold;
+    }
+
+    .group-members {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      list-style: none;
+    }
+
+    .group-member-item {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #334155;
+      transition: var(--transition);
+    }
+
+    .group-member-item:hover {
+      background: #f1f5f9;
+      transform: scale(1.05);
+    }
+
+    .group-actions-panel {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 15px;
+    }
+
+    /* Global Confetti Canvas */
+    #confetti-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    /* Timer Alarm Overlay */
+    .alarm-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(231, 76, 60, 0.95);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      color: white;
+      text-align: center;
+      gap: 30px;
+      animation: flashRed 1s infinite alternate;
+    }
+
+    .alarm-overlay h2 {
+      font-size: 5.5rem;
+      text-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    .alarm-overlay p {
+      font-size: 2.2rem;
+      font-weight: bold;
+    }
+
+    .btn-alarm-stop {
+      font-family: 'Jua', sans-serif;
+      font-size: 2rem;
+      padding: 15px 60px;
+      border: none;
+      border-radius: 40px;
+      background: white;
+      color: #e74c3c;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      font-weight: bold;
+      transition: var(--transition);
+      animation: pulse 1.5s infinite;
+    }
+
+    .btn-alarm-stop:hover {
+      transform: scale(1.08);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.4);
+    }
+
+    /* Floating student input drawer toggle for compact screens */
+    .sidebar-toggle-btn {
+      display: none;
+    }
+
+    /* Keyframes for animations */
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    @keyframes shake {
+      0% { transform: translate(1px, 1px) rotate(0deg); }
+      10% { transform: translate(-1px, -2px) rotate(-1deg); }
+      20% { transform: translate(-3px, 0px) rotate(1deg); }
+      30% { transform: translate(0px, 2px) rotate(0deg); }
+      40% { transform: translate(1px, -1px) rotate(1deg); }
+      50% { transform: translate(-1px, 2px) rotate(-1deg); }
+      60% { transform: translate(-3px, 1px) rotate(0deg); }
+      70% { transform: translate(2px, 1px) rotate(-1deg); }
+      80% { transform: translate(-1px, -1px) rotate(1deg); }
+      90% { transform: translate(2px, 2px) rotate(0deg); }
+      100% { transform: translate(1px, -2px) rotate(-1deg); }
+    }
+
+    @keyframes popWin {
+      0% { transform: scale(0.3); opacity: 0; }
+      50% { transform: scale(1.1); }
+      70% { transform: scale(0.95); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes zoomIn {
+      0% { transform: scale(0.8); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes fadeInUp {
+      0% { transform: translateY(15px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes flashRed {
+      0% { background: rgba(231, 76, 60, 0.95); }
+      100% { background: rgba(241, 196, 15, 0.95); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.04); }
+    }
+
+    /* Print styling */
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      .group-results-area, .group-results-area * {
+        visibility: visible;
+      }
+      .group-results-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        border: none;
+      }
+      .group-actions-panel {
+        display: none;
+      }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 1024px) {
+      main {
+        flex-direction: column;
+        height: auto;
+      }
+      .sidebar {
+        width: 100%;
+        height: 250px;
+      }
+      .tab-content {
+        height: 550px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Web Audio API and Synthesizer trigger helper -->
+  <header>
+    <div class="logo-container">
+      <div class="logo-emoji">🏫</div>
+      <div class="logo-text">
+        <h1>신나는 교실 도구 상자</h1>
+        <p>우리 반 선생님 전용 스마트 도구</p>
+      </div>
+    </div>
+    <nav class="nav-tabs">
+      <button class="nav-btn active" data-tab="draw">🎲 랜덤 뽑기</button>
+      <button class="nav-btn" data-tab="timer">⏱️ 타이머</button>
+      <button class="nav-btn" data-tab="group">👥 모둠 편성</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Shared Sidebar: Student Names -->
+    <section class="sidebar">
+      <h2>👥 우리 반 명단</h2>
+      <textarea id="student-input" class="student-textarea" placeholder="학생 이름을 쉼표(,)나 띄어쓰기, 또는 엔터로 구분해서 입력해주세요.&#10;&#10;예: 김철수 이영희 박민수 최지우 홍길동"></textarea>
+      <div class="sidebar-info">
+        <span>등록된 학생 수: <strong id="student-count">0</strong>명</span>
+      </div>
+      <div class="sidebar-actions">
+        <button id="btn-clear-names" class="btn-secondary">지우기</button>
+        <button id="btn-save-names" class="btn-primary">저장하기</button>
+      </div>
+    </section>
+
+    <!-- Main Dynamic Content Area -->
+    <section class="content-area">
+      
+      <!-- TAB 1: RANDOM PICK -->
+      <div id="tab-draw" class="tab-content active">
+        <div class="draw-container">
+          <h2 style="font-size: 2.2rem; color: #34495e;">🎲 오늘의 주인공은 누구?</h2>
+          
+          <div id="draw-display" class="draw-display-box">
+            <span id="draw-text" class="draw-result placeholder-text">?</span>
+          </div>
+
+          <div class="draw-options">
+            <label>
+              <input type="checkbox" id="chk-exclude-winner" checked>
+              <span>한 번 뽑힌 학생은 다음 뽑기에서 제외하기</span>
+            </label>
+          </div>
+
+          <button id="btn-draw" class="btn-draw-main">
+            <span>🎲 뽑 기 !</span>
+          </button>
+
+          <!-- Session Drawn List -->
+          <div class="excluded-container" id="drawn-session-container" style="display: none;">
+            <div class="excluded-title">
+              <span>이번 시간 뽑힌 학생들:</span>
+              <button id="btn-reset-drawn" class="btn-reset-excluded">초기화</button>
+            </div>
+            <div class="excluded-tags" id="drawn-tags">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: TIMER -->
+      <div id="tab-timer" class="tab-content">
+        <div class="timer-container">
+          <h2 style="font-size: 2.2rem; color: #34495e;">⏱️ 집중! 카운트다운 타이머</h2>
+
+          <div class="timer-display-wrapper">
+            <svg class="timer-svg" viewBox="0 0 160 160">
+              <circle class="timer-bg-circle" cx="80" cy="80" r="70"></circle>
+              <circle id="timer-progress" class="timer-progress-circle" cx="80" cy="80" r="70" stroke-dasharray="439.8" stroke-dashoffset="0"></circle>
+            </svg>
+            <div class="timer-text-overlay">
+              <div id="time-display" class="timer-time">03:00</div>
+              <div id="timer-status" class="timer-state-label">대기 중</div>
+            </div>
+          </div>
+
+          <div class="timer-controls-box">
+            <!-- Preset Buttons -->
+            <div class="timer-row">
+              <button class="btn-timer-preset" data-sec="30">30초</button>
+              <button class="btn-timer-preset" data-sec="60">1분</button>
+              <button class="btn-timer-preset" data-sec="120">2분</button>
+              <button class="btn-timer-preset" data-sec="180">3분</button>
+              <button class="btn-timer-preset" data-sec="300">5분</button>
+              <button class="btn-timer-preset" data-sec="600">10분</button>
+            </div>
+
+            <!-- Fine-tuning Adjustment Buttons -->
+            <div class="timer-row">
+              <button class="btn-timer-adj" data-adj="60">+1분</button>
+              <button class="btn-timer-adj" data-adj="-60">-1분</button>
+              <button class="btn-timer-adj" data-adj="10">+10초</button>
+              <button class="btn-timer-adj" data-adj="-10">-10초</button>
+            </div>
+          </div>
+
+          <!-- Main Actions -->
+          <div class="timer-actions">
+            <button id="btn-timer-toggle" class="btn-timer-main start">▶ 시작</button>
+            <button id="btn-timer-reset" class="btn-timer-reset">🔄 리셋</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: GROUP MAKER -->
+      <div id="tab-group" class="tab-content">
+        <div class="group-container">
+          <h2 style="font-size: 2.2rem; color: #34495e;">👥 뚝딱! 모둠 나누기</h2>
+
+          <div class="group-setup-panel">
+            <div class="group-count-selector">
+              <span>만들 모둠 수:</span>
+              <div class="group-count-control">
+                <button id="btn-group-dec" class="btn-count">-</button>
+                <div id="group-count-val" class="group-count-display">4</div>
+                <button id="btn-group-inc" class="btn-count">+</button>
+              </div>
+            </div>
+
+            <button id="btn-group-run" class="btn-group-run">
+              <span>👥 모둠 구성하기</span>
+            </button>
+          </div>
+
+          <!-- Results -->
+          <div id="group-results" class="group-results-area">
+            <div id="group-empty-state" class="group-results-empty">
+              <span class="icon">👥</span>
+              <span>모둠 수와 학생 명단을 확인하고<br><b>[모둠 구성하기]</b> 버튼을 눌러주세요.</span>
+            </div>
+            
+            <div id="group-grid-container" class="group-grid">
+              <!-- Group Cards populated dynamically -->
+            </div>
+
+            <div class="group-actions-panel" id="group-actions-panel" style="display: none;">
+              <button id="btn-group-copy" class="btn-secondary">📋 결과 복사하기</button>
+              <button id="btn-group-print" class="btn-secondary">🖨️ 인쇄하기</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- Confetti Canvas -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Alarm Overlay Screen -->
+  <div class="alarm-overlay" id="alarm-screen">
+    <h2>⏰ 시간이 다 되었어요!</h2>
+    <p>모두 제자리로 돌아오세요!</p>
+    <button class="btn-alarm-stop" id="btn-alarm-close">🔔 소리 끄기 / 닫기</button>
+  </div>
+
+  <script>
+    /* ==========================================================================
+       SHARED STATE / STUDENT LIST MANAGER
+       ========================================================================== */
+    let students = [];
+    let drawnStudents = []; // For session exclusions in Random Pick
+
+    const studentInput = document.getElementById('student-input');
+    const studentCountEl = document.getElementById('student-count');
+    const btnSaveNames = document.getElementById('btn-save-names');
+    const btnClearNames = document.getElementById('btn-clear-names');
+
+    // Parse and sync student count labels
+    function updateStudentArray() {
+      const text = studentInput.value;
+      // Split by comma, newline, spaces
+      students = text.split(/[\n,]+/)
+        .map(name => name.trim())
+        .filter(name => name.length > 0);
+      
+      // Also check space-separated if no newline/comma splits occurred
+      if (students.length === 1 && text.includes(' ')) {
+        students = text.split(/\s+/)
+          .map(name => name.trim())
+          .filter(name => name.length > 0);
+      }
+
+      studentCountEl.textContent = students.length;
+    }
+
+    function saveNamesToLocal() {
+      updateStudentArray();
+      localStorage.setItem('classroom_students', JSON.stringify(students));
+      showToast('명단이 저장되었습니다! 💾');
+    }
+
+    function loadNamesFromLocal() {
+      const stored = localStorage.getItem('classroom_students');
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            students = parsed;
+            studentInput.value = students.join(', ');
+            studentCountEl.textContent = students.length;
+          }
+        } catch (e) {
+          console.error("Local storage names error:", e);
+        }
+      }
+    }
+
+    studentInput.addEventListener('input', updateStudentArray);
+    btnSaveNames.addEventListener('click', saveNamesToLocal);
+    btnClearNames.addEventListener('click', () => {
+      if (confirm('우리 반 명단을 비우시겠습니까?')) {
+        studentInput.value = '';
+        students = [];
+        studentCountEl.textContent = 0;
+        localStorage.removeItem('classroom_students');
+      }
+    });
+
+    // Helper Toast notification
+    function showToast(message) {
+      // Basic visual helper
+      const toast = document.createElement('div');
+      toast.style.position = 'fixed';
+      toast.style.bottom = '20px';
+      toast.style.right = '20px';
+      toast.style.background = '#2c3e50';
+      toast.style.color = '#fff';
+      toast.style.padding = '12px 24px';
+      toast.style.borderRadius = '30px';
+      toast.style.fontSize = '1.05rem';
+      toast.style.fontFamily = "'Jua', sans-serif";
+      toast.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+      toast.style.zIndex = '999';
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateY(10px)';
+      toast.style.transition = 'all 0.3s ease';
+      toast.textContent = message;
+
+      document.body.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '1';
+        toast.style.transform = 'translateY(0)';
+      }, 50);
+
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(10px)';
+        setTimeout(() => toast.remove(), 300);
+      }, 2500);
+    }
+
+
+    /* ==========================================================================
+       TAB SWITCHING
+       ========================================================================== */
+    const navButtons = document.querySelectorAll('.nav-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    navButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetTab = btn.getAttribute('data-tab');
+        
+        navButtons.forEach(b => b.classList.remove('active'));
+        tabContents.forEach(tc => tc.classList.remove('active'));
+
+        btn.classList.add('active');
+        document.getElementById(`tab-${targetTab}`).classList.add('active');
+      });
+    });
+
+
+    /* ==========================================================================
+       TOOL 1: RANDOM PICK
+       ========================================================================== */
+    const btnDraw = document.getElementById('btn-draw');
+    const drawText = document.getElementById('draw-text');
+    const drawDisplay = document.getElementById('draw-display');
+    const chkExcludeWinner = document.getElementById('chk-exclude-winner');
+    const drawnSessionContainer = document.getElementById('drawn-session-container');
+    const drawnTagsContainer = document.getElementById('drawn-tags');
+    const btnResetDrawn = document.getElementById('btn-reset-drawn');
+
+    let drawInterval = null;
+
+    function renderDrawnTags() {
+      if (drawnStudents.length === 0) {
+        drawnSessionContainer.style.display = 'none';
+        return;
+      }
+      drawnSessionContainer.style.display = 'block';
+      drawnTagsContainer.innerHTML = '';
+      drawnStudents.forEach((name, idx) => {
+        const tag = document.createElement('span');
+        tag.className = 'excluded-tag';
+        tag.innerHTML = `${name} <span style="cursor:pointer; color:#e74c3c;" onclick="removeDrawnStudent(${idx})">×</span>`;
+        drawnTagsContainer.appendChild(tag);
+      });
+    }
+
+    window.removeDrawnStudent = function(idx) {
+      drawnStudents.splice(idx, 1);
+      renderDrawnTags();
+    };
+
+    btnResetDrawn.addEventListener('click', () => {
+      drawnStudents = [];
+      renderDrawnTags();
+      showToast('뽑기 제외 목록이 초기화되었습니다. 🔄');
+    });
+
+    btnDraw.addEventListener('click', () => {
+      if (students.length === 0) {
+        alert('먼저 "우리 반 명단"에 학생 이름을 적어주세요!');
+        studentInput.focus();
+        return;
+      }
+
+      // Filter eligible students
+      let pool = [...students];
+      if (chkExcludeWinner.checked) {
+        pool = students.filter(name => !drawnStudents.includes(name));
+      }
+
+      if (pool.length === 0) {
+        alert('모든 학생이 한 번씩 뽑혔습니다! 제외 목록을 초기화합니다.');
+        drawnStudents = [];
+        renderDrawnTags();
+        pool = [...students];
+      }
+
+      // Start Shuffle Animation
+      if (drawInterval) clearInterval(drawInterval);
+      
+      btnDraw.disabled = true;
+      drawDisplay.className = 'draw-display-box shuffling';
+      drawText.classList.remove('placeholder-text', 'animate-win');
+      
+      let duration = 2000; // 2 seconds
+      let intervalSpeed = 50;
+      let elapsed = 0;
+
+      drawInterval = setInterval(() => {
+        const tempIndex = Math.floor(Math.random() * pool.length);
+        drawText.textContent = pool[tempIndex];
+        elapsed += intervalSpeed;
+
+        // Decelerate shuffle towards the end
+        if (elapsed > duration * 0.7) {
+          clearInterval(drawInterval);
+          intervalSpeed = 150;
+          drawInterval = setInterval(() => {
+            const finalIndex = Math.floor(Math.random() * pool.length);
+            drawText.textContent = pool[finalIndex];
+            elapsed += intervalSpeed;
+
+            if (elapsed >= duration) {
+              clearInterval(drawInterval);
+              // Final Winner select
+              const winnerIndex = Math.floor(Math.random() * pool.length);
+              const winner = pool[winnerIndex];
+              
+              drawText.textContent = winner;
+              drawDisplay.className = 'draw-display-box winner';
+              drawText.classList.add('animate-win');
+              
+              // Register draw
+              if (chkExcludeWinner.checked && !drawnStudents.includes(winner)) {
+                drawnStudents.push(winner);
+                renderDrawnTags();
+              }
+
+              // Fire Confetti!
+              startConfetti();
+              playWinSound();
+
+              btnDraw.disabled = false;
+            }
+          }, intervalSpeed);
+        }
+      }, intervalSpeed);
+    });
+
+
+    /* ==========================================================================
+       CONFETTI CANVAS ANIMATION
+       ========================================================================== */
+    const canvas = document.getElementById('confetti-canvas');
+    const ctx = canvas.getContext('2d');
+    let confetti = [];
+    let confettiActive = false;
+    let confettiTimer = null;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class ConfettiPiece {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * -canvas.height - 20;
+        this.size = Math.random() * 8 + 6;
+        this.color = `hsl(${Math.random() * 360}, 90%, 60%)`;
+        this.speedX = Math.random() * 4 - 2;
+        this.speedY = Math.random() * 5 + 4;
+        this.rotation = Math.random() * 360;
+        this.rotationSpeed = Math.random() * 8 - 4;
+      }
+
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        this.rotation += this.rotationSpeed;
+
+        if (this.y > canvas.height) {
+          // Recycle
+          this.x = Math.random() * canvas.width;
+          this.y = -20;
+          this.speedY = Math.random() * 5 + 4;
+        }
+      }
+
+      draw() {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate((this.rotation * Math.PI) / 180);
+        ctx.fillStyle = this.color;
+        ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
+        ctx.restore();
+      }
+    }
+
+    function setupConfetti() {
+      confetti = [];
+      for (let i = 0; i < 150; i++) {
+        confetti.push(new ConfettiPiece());
+      }
+    }
+
+    function animateConfetti() {
+      if (!confettiActive) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        return;
+      }
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      confetti.forEach(p => {
+        p.update();
+        p.draw();
+      });
+      requestAnimationFrame(animateConfetti);
+    }
+
+    function startConfetti() {
+      setupConfetti();
+      confettiActive = true;
+      animateConfetti();
+      
+      if (confettiTimer) clearTimeout(confettiTimer);
+      confettiTimer = setTimeout(() => {
+        confettiActive = false;
+      }, 3500); // stop adding/drawing after 3.5s
+    }
+
+
+    /* ==========================================================================
+       TOOL 2: TIMER
+       ========================================================================== */
+    let timerTotalSeconds = 180; // Default 3 min
+    let timerSecondsRemaining = 180;
+    let timerInterval = null;
+    let audioCtx = null;
+    let alarmInterval = null;
+
+    const timeDisplay = document.getElementById('time-display');
+    const timerStatus = document.getElementById('timer-status');
+    const timerProgress = document.getElementById('timer-progress');
+    const btnTimerToggle = document.getElementById('btn-timer-toggle');
+    const btnTimerReset = document.getElementById('btn-timer-reset');
+    const alarmScreen = document.getElementById('alarm-screen');
+    const btnAlarmClose = document.getElementById('btn-alarm-close');
+
+    // SVG Progress ring setup
+    // Radius is 70, Circumference = 2 * PI * r = ~439.8
+    const maxStrokeDash = 439.8;
+    timerProgress.style.strokeDasharray = maxStrokeDash;
+
+    function updateTimerDisplay() {
+      const minutes = Math.floor(timerSecondsRemaining / 60);
+      const seconds = timerSecondsRemaining % 60;
+      timeDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+      
+      // Update progress ring
+      const ratio = timerSecondsRemaining / timerTotalSeconds;
+      const offset = maxStrokeDash * (1 - ratio);
+      timerProgress.style.strokeDashoffset = isNaN(offset) ? 0 : offset;
+    }
+
+    function startTimer() {
+      if (timerSecondsRemaining <= 0) return;
+      
+      timerInterval = setInterval(() => {
+        timerSecondsRemaining--;
+        updateTimerDisplay();
+
+        if (timerSecondsRemaining <= 0) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+          triggerAlarm();
+        }
+      }, 1000);
+
+      btnTimerToggle.textContent = '⏸ 일시정지';
+      btnTimerToggle.className = 'btn-timer-main pause';
+      timerStatus.textContent = '진행 중';
+    }
+
+    // Toggle timer pause
+    function pauseTimer() {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      btnTimerToggle.textContent = '▶ 시작';
+      btnTimerToggle.className = 'btn-timer-main start';
+      timerStatus.textContent = '일시정지';
+    }
+
+    function triggerAlarm() {
+      // Show Red/Yellow flashing alarm screen
+      alarmScreen.style.display = 'flex';
+      btnTimerToggle.textContent = '▶ 시작';
+      btnTimerToggle.className = 'btn-timer-main start';
+      timerStatus.textContent = '종료';
+      
+      // Play Synthesizer alert repeatedly
+      startAlarmSound();
+    }
+
+    function stopAlarm() {
+      alarmScreen.style.display = 'none';
+      stopAlarmSound();
+      resetTimer();
+    }
+
+    function resetTimer() {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      timerSecondsRemaining = timerTotalSeconds;
+      updateTimerDisplay();
+      btnTimerToggle.textContent = '▶ 시작';
+      btnTimerToggle.className = 'btn-timer-main start';
+      timerStatus.textContent = '대기 중';
+    }
+
+    // Bind controls
+    btnTimerToggle.addEventListener('click', () => {
+      // AudioContext needs interaction to activate
+      initAudio();
+      if (timerInterval) {
+        pauseTimer();
+      } else {
+        startTimer();
+      }
+    });
+
+    btnTimerReset.addEventListener('click', resetTimer);
+    btnAlarmClose.addEventListener('click', stopAlarm);
+
+    // Bind presets
+    document.querySelectorAll('.btn-timer-preset').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const sec = parseInt(btn.getAttribute('data-sec'), 10);
+        timerTotalSeconds = sec;
+        timerSecondsRemaining = sec;
+        resetTimer();
+      });
+    });
+
+    // Bind adjustments
+    document.querySelectorAll('.btn-timer-adj').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const adj = parseInt(btn.getAttribute('data-adj'), 10);
+        let target = timerSecondsRemaining + adj;
+        if (target < 0) target = 0;
+        // Cap max timer to 99 min 59s (5999s)
+        if (target > 5999) target = 5999;
+
+        // If timer is stopped, adjust total size. If running, adjust live remaining.
+        if (!timerInterval) {
+          timerTotalSeconds = target;
+        }
+        timerSecondsRemaining = target;
+        updateTimerDisplay();
+      });
+    });
+
+
+    /* ==========================================================================
+       SYNTHESIZER SOUNDS (WEB AUDIO API)
+       ========================================================================== */
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    // Friendly winner fanfare chime
+    function playWinSound() {
+      initAudio();
+      if (!audioCtx) return;
+
+      const now = audioCtx.currentTime;
+      const notes = [261.63, 329.63, 392.00, 523.25]; // C4, E4, G4, C5
+      
+      notes.forEach((freq, index) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        
+        osc.type = 'triangle';
+        osc.frequency.value = freq;
+        
+        gain.gain.setValueAtTime(0, now + index * 0.12);
+        gain.gain.linearRampToValueAtTime(0.3, now + index * 0.12 + 0.04);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + index * 0.12 + 0.35);
+        
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        
+        osc.start(now + index * 0.12);
+        osc.stop(now + index * 0.12 + 0.4);
+      });
+    }
+
+    // Repeated timer chime alarm
+    function startAlarmSound() {
+      initAudio();
+      if (!audioCtx) return;
+
+      let playCycle = () => {
+        const now = audioCtx.currentTime;
+        // Two-tone warning beep: A4 - F4
+        const tones = [880, 698.46];
+        
+        tones.forEach((freq, idx) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          
+          osc.type = 'sine';
+          osc.frequency.value = freq;
+          
+          gain.gain.setValueAtTime(0, now + idx * 0.25);
+          gain.gain.linearRampToValueAtTime(0.4, now + idx * 0.25 + 0.05);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.25 + 0.24);
+          
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          
+          osc.start(now + idx * 0.25);
+          osc.stop(now + idx * 0.25 + 0.25);
+        });
+      };
+
+      // Play immediately, then every 1 second
+      playCycle();
+      alarmInterval = setInterval(playCycle, 1000);
+    }
+
+    function stopAlarmSound() {
+      if (alarmInterval) {
+        clearInterval(alarmInterval);
+        alarmInterval = null;
+      }
+    }
+
+
+    /* ==========================================================================
+       TOOL 3: GROUP MAKER
+       ========================================================================== */
+    let groupCount = 4;
+    const btnGroupDec = document.getElementById('btn-group-dec');
+    const btnGroupInc = document.getElementById('btn-group-inc');
+    const groupCountVal = document.getElementById('group-count-val');
+    const btnGroupRun = document.getElementById('btn-group-run');
+    const groupResultsEmpty = document.getElementById('group-empty-state');
+    const groupGridContainer = document.getElementById('group-grid-container');
+    const groupActionsPanel = document.getElementById('group-actions-panel');
+    const btnGroupCopy = document.getElementById('btn-group-copy');
+    const btnGroupPrint = document.getElementById('btn-group-print');
+
+    btnGroupDec.addEventListener('click', () => {
+      if (groupCount > 1) {
+        groupCount--;
+        groupCountVal.textContent = groupCount;
+      }
+    });
+
+    btnGroupInc.addEventListener('click', () => {
+      // Arbitrary max group count 20
+      if (groupCount < 20) {
+        groupCount++;
+        groupCountVal.textContent = groupCount;
+      }
+    });
+
+    // Fisher-Yates Shuffle
+    function shuffleArray(array) {
+      const copy = [...array];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    btnGroupRun.addEventListener('click', () => {
+      if (students.length === 0) {
+        alert('먼저 "우리 반 명단"에 학생 이름을 적어주세요!');
+        studentInput.focus();
+        return;
+      }
+
+      if (groupCount > students.length) {
+        alert('모둠 수가 학생 수보다 많습니다. 모둠 수를 조정해주세요.');
+        return;
+      }
+
+      // Hide empty state and show actions
+      groupResultsEmpty.style.display = 'none';
+      groupGridContainer.innerHTML = '';
+      groupActionsPanel.style.display = 'flex';
+
+      // Shuffle and partition
+      const shuffled = shuffleArray(students);
+      const groups = Array.from({ length: groupCount }, () => []);
+
+      shuffled.forEach((student, index) => {
+        const groupIndex = index % groupCount;
+        groups[groupIndex].push(student);
+      });
+
+      // Render cards
+      groups.forEach((groupStudents, idx) => {
+        const card = document.createElement('div');
+        card.className = 'group-card';
+        // Delay visual display slightly per card for animations
+        card.style.animationDelay = `${idx * 0.08}s`;
+
+        const header = document.createElement('div');
+        header.className = 'group-card-header';
+        header.innerHTML = `<span>${idx + 1}모둠</span> <span class="group-member-count">${groupStudents.length}명</span>`;
+        card.appendChild(header);
+
+        const memberList = document.createElement('ul');
+        memberList.className = 'group-members';
+
+        groupStudents.forEach(student => {
+          const li = document.createElement('li');
+          li.className = 'group-member-item';
+          li.textContent = student;
+          memberList.appendChild(li);
+        });
+
+        card.appendChild(memberList);
+        groupGridContainer.appendChild(card);
+      });
+
+      showToast('모둠이 예쁘게 구성되었습니다! 👥');
+      playWinSound(); // Fun fanfare chime
+    });
+
+    // Copy group result text
+    btnGroupCopy.addEventListener('click', () => {
+      const cards = groupGridContainer.querySelectorAll('.group-card');
+      if (cards.length === 0) return;
+
+      let textOutput = "[모둠 구성 결과]\n\n";
+      cards.forEach(card => {
+        const title = card.querySelector('.group-card-header span').textContent;
+        const members = Array.from(card.querySelectorAll('.group-member-item'))
+          .map(el => el.textContent)
+          .join(', ');
+        textOutput += `📍 ${title}: ${members}\n`;
+      });
+
+      navigator.clipboard.writeText(textOutput)
+        .then(() => showToast('모둠 편성 결과가 복사되었습니다! 📋'))
+        .catch(err => console.error('Copy failed:', err));
+    });
+
+    // Print result
+    btnGroupPrint.addEventListener('click', () => {
+      window.print();
+    });
+
+
+    /* ==========================================================================
+       INITIALIZATION
+       ========================================================================== */
+    window.addEventListener('DOMContentLoaded', () => {
+      loadNamesFromLocal();
+      updateTimerDisplay();
+    });
+  </script>
+</body>
+</html>
